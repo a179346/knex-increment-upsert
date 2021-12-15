@@ -28,16 +28,20 @@
 ```sh
 npm install knex-increment-upsert
 ```
+## 🧩 Requirements
+- knex >= `v0.95.0`
 
 ## 📖 Usage
-- ### incrementUpsert
-##### `incrementUpsert(db, tableName, data, incrementColumns?, updateColumns?)` => `Promise<number[]>`
+> ### `incrementUpsert(db, tableName, data, incrementColumns?, updateColumns?)` => `Promise<number[]>`
+- #### Single upsert
 ```js
 const { incrementUpsert } = require('knex-increment-upsert');
 const knex = require('knex');
 
 const db = knex({ ... });
 
+// Outputs:
+// insert into `table1` (`inc1`, `pk1`, `pk2`) values (3, 'pk1', 'pk2') on duplicate key update `inc1` = `inc1` + values(`inc1`)
 incrementUpsert(
   db, 
   'table1', 
@@ -48,8 +52,32 @@ incrementUpsert(
   }, 
   [ 'inc1' ]
 );
+```
+
+- #### Batch upsert
+```js
 // Outputs:
-// insert into `table1` (`inc1`, `pk1`, `pk2`) values (3, 'pk1', 'pk2') on duplicate key update `inc1` = `inc1` + values(`inc1`)
+// insert into `table1` (`col1`, `inc1`, `pk1`, `pk2`) values ('1', 1, '1', '1'), ('2', 2, '2', '2') on duplicate key update `inc1` = `inc1` + values(`inc1`),`col1` = values(`col1`)
+incrementUpsert(
+  db,
+  'table1',
+  [
+    {
+      pk1: '1',
+      pk2: '1',
+      inc1: 1,
+      col1: '1'
+    },
+    {
+      pk1: '2',
+      pk2: '2',
+      inc1: 2,
+      col1: '2'
+    }
+  ],
+  [ 'inc1' ],
+  [ 'col1' ]
+);
 ```
 
 ## 🙋‍♂️ Author
