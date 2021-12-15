@@ -1,6 +1,6 @@
 {
   "name": "knex-increment-upsert",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "knex insert on duplicate key update & increment",
   "main": "dist/index.js",
   "scripts": {
