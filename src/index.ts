@@ -5,7 +5,8 @@ export async function incrementUpsert (
   tableName: string,
   data: Record<string, any> | Record<string, any>[],
   incrementColumns?: string[] | null,
-  updateColumns?: string[] | null
+  updateColumns?: string[] | null,
+  trx?: Knex.Transaction,
 ): Promise<number[]> {
   const mergeData: Record<string, Knex.Raw<any>> = {};
   if (incrementColumns) {
@@ -19,9 +20,20 @@ export async function incrementUpsert (
     }
   }
 
-  const result = await db(tableName)
-    .insert(data)
-    .onConflict()
-    .merge(mergeData);
+  let result: number[];
+
+  if (trx) {
+    result = await db(tableName)
+      .insert(data)
+      .onConflict()
+      .merge(mergeData)
+      .transacting(trx);
+  } else {
+    result = await db(tableName)
+      .insert(data)
+      .onConflict()
+      .merge(mergeData);
+  }
+
   return result;
 }
