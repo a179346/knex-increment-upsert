@@ -32,7 +32,7 @@ npm install knex-increment-upsert
 - knex >= `v0.95.0`
 
 ## 📖 Usage
-> ### `incrementUpsert(db, tableName, data, incrementColumns?, updateColumns?)` => `Promise<number[]>`
+> ### `incrementUpsert(db, tableName, data, incrementColumns?, updateColumns?, trx?)` => `Promise<number[]>`
 - #### Single upsert
 ```js
 const { incrementUpsert } = require('knex-increment-upsert');
